@@ -95,7 +95,9 @@ public final class ColaPrioridad {
                 mejor = der;
 
             if (!tieneMayorPrioridad(heap.get(mejor), heap.get(i)))
-                i = intercambiar(i, mejor);
+                break;
+
+            i = intercambiar(i, mejor);
         }
     }
 

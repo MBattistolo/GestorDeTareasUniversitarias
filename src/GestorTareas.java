@@ -11,8 +11,8 @@ public class GestorTareas {
 
     public void registrarTarea(int id, String titulo, String descripcion, LocalDate fechaEntrega, double pesoNota, Asignatura asignatura) throws EFueraRango {
         Tarea t = new Tarea(id, titulo, descripcion, fechaEntrega, pesoNota, asignatura);
-        historial.add(t);
-        cola.encolar(new EntradaCola(t, historial.size()));
+        cola.encolar(new EntradaCola(t, siguienteOrden));
+        siguienteOrden++;
     }
 
     public Tarea consultarSiguiente() {
@@ -35,17 +35,13 @@ public class GestorTareas {
     }
 
     public List<Tarea> obtenerPendientes() {
-        return obtenerPendientes(new ArrayList<>(), 0);
-    }
+        List<Tarea> pendientes = new ArrayList<>();
 
-    private List<Tarea> obtenerPendientes(List<Tarea> pendientes, int i) {
-        if (i == cola.tamano())
-            return pendientes;
-
-        if (cola.listarEnOrden().get(i).getTarea().getEstado() == EstadoTarea.PENDIENTE)
-            pendientes.add(cola.listarEnOrden().get(i).getTarea());
-
-        return obtenerPendientes(pendientes, i + 1);
+        for (EntradaCola entrada : cola.listarEnOrden()) {
+            if (entrada.getTarea().getEstado() == EstadoTarea.PENDIENTE)
+                pendientes.add(entrada.getTarea());
+        }
+        return pendientes;
     }
 
     public List<Tarea> obtenerHistorial() {
