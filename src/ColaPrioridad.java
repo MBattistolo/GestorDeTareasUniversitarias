@@ -45,10 +45,6 @@ public final class ColaPrioridad {
         return heap.isEmpty();
     }
 
-    public int tamano() {
-        return heap.size();
-    }
-
     public List<EntradaCola> listarEnOrden() {
         ColaPrioridad copia = new ColaPrioridad(heap);
         List<EntradaCola> resultado = new ArrayList<>();
@@ -70,6 +66,10 @@ public final class ColaPrioridad {
         int peso = Double.compare(ta.getPesoNota(), tb.getPesoNota());
         if (peso != 0)
             return peso > 0;
+
+        int tiempo = Double.compare(ta.getTiempoEstimadoMin(), tb.getTiempoEstimadoMin());
+        if (tiempo != 0)
+            return tiempo < 0;
 
         return a.getOrdenLlegada() < b.getOrdenLlegada();
     }

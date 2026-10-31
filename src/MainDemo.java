@@ -22,15 +22,15 @@ public class MainDemo {
         System.out.println("Prioridad: fecha anterior > mayor peso > primer registro.\n");
         System.out.println("1. Registro de cinco tareas en un orden diferente al de atención:");
         gestor.registrarTarea(1, "Proyecto de estructuras", "Implementar el heap",
-                hoy.plusDays(3), 30, estructuras);
+                hoy.plusDays(3), 30, 60, estructuras);
         gestor.registrarTarea(2, "Taller de programación", "Resolver ejercicios",
-                hoy.plusDays(1), 10, estructuras);
+                hoy.plusDays(1), 10, 45, estructuras);
         gestor.registrarTarea(3, "Cuestionario de cálculo", "Repasar derivadas",
-                hoy.plusDays(3), 5, calculo);
+                hoy.plusDays(3), 5, 30, calculo);
         gestor.registrarTarea(4, "Ejercicio adicional", "Empate con el taller",
-                hoy.plusDays(1), 10, estructuras);
+                hoy.plusDays(1), 10, 120, estructuras);
         gestor.registrarTarea(5, "Entrega atrasada", "Demostrar prioridad por fecha",
-                hoy.minusDays(1), 1, calculo);
+                hoy.minusDays(1), 1, 15, calculo);
         System.out.println("IDs registrados: 1, 2, 3, 4, 5");
 
         System.out.println("\n2. Pendientes en orden de prioridad:");
@@ -62,7 +62,7 @@ public class MainDemo {
 
         System.out.println("\n6. Validación del peso:");
         try {
-            gestor.registrarTarea(6, "Tarea inválida", "Peso fuera de rango", hoy, 120, calculo);
+            gestor.registrarTarea(6, "Tarea inválida", "Peso fuera de rango", hoy, 120, 120, calculo);
             throw new IllegalStateException("La validación del peso no funcionó.");
         } catch (EFueraRango e) {
             System.out.println("Se rechazó correctamente el peso 120 %: " + e.getMessage());

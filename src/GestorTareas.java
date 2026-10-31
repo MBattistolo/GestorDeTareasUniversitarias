@@ -9,8 +9,8 @@ public class GestorTareas {
     private int siguienteOrden = 0;
     List<Tarea> historial = new ArrayList<>();
 
-    public void registrarTarea(int id, String titulo, String descripcion, LocalDate fechaEntrega, double pesoNota, Asignatura asignatura) throws EFueraRango {
-        Tarea t = new Tarea(id, titulo, descripcion, fechaEntrega, pesoNota, asignatura);
+    public void registrarTarea(int id, String titulo, String descripcion, LocalDate fechaEntrega, double pesoNota, int tiempoEstimadoMin, Asignatura asignatura) throws EFueraRango {
+        Tarea t = new Tarea(id, titulo, descripcion, fechaEntrega, pesoNota, tiempoEstimadoMin, asignatura);
         cola.encolar(new EntradaCola(t, siguienteOrden));
         siguienteOrden++;
     }

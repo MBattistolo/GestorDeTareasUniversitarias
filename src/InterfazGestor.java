@@ -20,6 +20,7 @@ public class InterfazGestor extends JFrame {
     private final JTextField asignatura = new JTextField("Estructura de Datos", 20);
     private final JTextField fecha = new JTextField(LocalDate.now().plusDays(1).toString(), 20);
     private final JTextField peso = new JTextField("10", 20);
+    private final JTextField tiempo = new JTextField("10", 20);
     private final JTextArea descripcion = new JTextArea(3, 20);
     private final DefaultTableModel pendientes = crearModelo();
     private final DefaultTableModel historial = crearModelo();
@@ -68,8 +69,8 @@ public class InterfazGestor extends JFrame {
         c.insets = new Insets(3, 8, 3, 8);
         int fila = 0;
         String[] etiquetas = {"Título", "Código de asignatura", "Nombre de asignatura",
-                "Entrega (AAAA-MM-DD)", "Peso en la nota (0 a 100 %)"};
-        JTextField[] campos = {titulo, codigo, asignatura, fecha, peso};
+                "Entrega (AAAA-MM-DD)", "Peso en la nota (0 a 100 %)", "Tiempo estimado (min)"};
+        JTextField[] campos = {titulo, codigo, asignatura, fecha, peso, tiempo};
         for (int i = 0; i < campos.length; i++) {
             c.gridy = fila++;
             panel.add(new JLabel(etiquetas[i]), c);
@@ -93,7 +94,7 @@ public class InterfazGestor extends JFrame {
     }
 
     private static DefaultTableModel crearModelo() {
-        return new DefaultTableModel(new String[]{"ID", "Tarea", "Asignatura", "Entrega", "Peso (%)", "Estado"}, 0) {
+        return new DefaultTableModel(new String[]{"ID", "Tarea", "Asignatura", "Entrega", "Peso (%)", "Tiempo (Min)", "Estado"}, 0) {
             @Override public boolean isCellEditable(int fila, int columna) { return false; }
         };
     }
@@ -120,11 +121,12 @@ public class InterfazGestor extends JFrame {
 
             LocalDate entrega = LocalDate.parse(fecha.getText().trim());
             double porcentaje = Double.parseDouble(peso.getText().trim().replace(',', '.'));
+            int tiempoEstimado = Integer.parseInt(tiempo.getText().trim().replace(',', '.'));
             if (!Double.isFinite(porcentaje))
                 throw new IllegalArgumentException("El peso debe ser un número finito entre 0 y 100.");
 
             gestor.registrarTarea(siguienteId, titulo.getText().trim(), descripcion.getText().trim(),
-                    entrega, porcentaje, new Asignatura(codigo.getText().trim(), asignatura.getText().trim()));
+                    entrega, porcentaje, tiempoEstimado, new Asignatura(codigo.getText().trim(), asignatura.getText().trim()));
             siguienteId++;
             titulo.setText("");
             descripcion.setText("");
@@ -134,9 +136,7 @@ public class InterfazGestor extends JFrame {
             error("Escribe una fecha válida como 2026-11-05 (AAAA-MM-DD).");
         } catch (NumberFormatException e) {
             error("El peso debe ser numérico. Ejemplo: 25 o 12,5.");
-        } catch (EFueraRango e) {
-            error(e.getMessage());
-        } catch (IllegalArgumentException e) {
+        } catch (EFueraRango | IllegalArgumentException e) {
             error(e.getMessage());
         }
     }
@@ -173,7 +173,7 @@ public class InterfazGestor extends JFrame {
         modelo.setRowCount(0);
         for (Tarea t : tareas)
             modelo.addRow(new Object[]{t.getId(), t.getTitulo(), t.getAsignatura().getNombre(),
-                    t.getFechaEntrega(), t.getPesoNota(), t.getEstado()});
+                    t.getFechaEntrega(), t.getPesoNota(), t.getTiempoEstimadoMin(), t.getEstado()});
     }
 
     private void cargarEjemplos() {
@@ -181,20 +181,20 @@ public class InterfazGestor extends JFrame {
             Asignatura ed = new Asignatura("ED", "Estructura de Datos");
             Asignatura cal = new Asignatura("CAL", "Cálculo");
             LocalDate hoy = LocalDate.now();
-            ejemplo("Proyecto de estructuras", hoy.plusDays(3), 30, ed);
-            ejemplo("Taller de programación", hoy.plusDays(1), 10, ed);
-            ejemplo("Cuestionario de cálculo", hoy.plusDays(3), 5, cal);
-            ejemplo("Ejercicio adicional", hoy.plusDays(1), 10, ed);
-            ejemplo("Entrega atrasada", hoy.minusDays(1), 1, cal);
+            ejemplo("Proyecto de estructuras", hoy.plusDays(3), 30, 60, ed);
+            ejemplo("Taller de programación", hoy.plusDays(1), 10, 45, ed);
+            ejemplo("Cuestionario de cálculo", hoy.plusDays(3), 5, 30, cal);
+            ejemplo("Ejercicio adicional", hoy.plusDays(1), 10, 120, ed);
+            ejemplo("Entrega atrasada", hoy.minusDays(1), 1, 15, cal);
             actualizar();
         } catch (EFueraRango e) {
             error(e.getMessage());
         }
     }
 
-    private void ejemplo(String nombre, LocalDate entrega, double porcentaje, Asignatura materia)
+    private void ejemplo(String nombre, LocalDate entrega, double porcentaje, int tiempo, Asignatura materia)
             throws EFueraRango {
-        gestor.registrarTarea(siguienteId, nombre, "Ejemplo para la exposición", entrega, porcentaje, materia);
+        gestor.registrarTarea(siguienteId, nombre, "Ejemplo para la exposición", entrega, porcentaje, tiempo, materia);
         siguienteId++;
     }
 

@@ -3,15 +3,16 @@ import Exceptions.EFueraRango;
 import java.time.LocalDate;
 
 public class Tarea {
-    private int id;
-    private String titulo;
-    private String descripcion;
-    private LocalDate fechaEntrega;
-    private double pesoNota;
-    private Asignatura asignatura;
+    private final int id;
+    private final String titulo;
+    private final String descripcion;
+    private final LocalDate fechaEntrega;
+    private final double pesoNota;
+    private final int tiempoEstimadoMin;
+    private final Asignatura asignatura;
     private EstadoTarea estado = EstadoTarea.PENDIENTE;
 
-    public Tarea(int id, String titulo, String descripcion, LocalDate fechaEntrega, double pesoNota, Asignatura asignatura) throws EFueraRango {
+    public Tarea(int id, String titulo, String descripcion, LocalDate fechaEntrega, double pesoNota, int tiempoEstimadoMin, Asignatura asignatura) throws EFueraRango {
         if (pesoNota < 0 || pesoNota > 100)
             throw new EFueraRango(0, 100);
 
@@ -20,6 +21,7 @@ public class Tarea {
         this.descripcion = descripcion;
         this.fechaEntrega = fechaEntrega;
         this.pesoNota = pesoNota;
+        this.tiempoEstimadoMin = tiempoEstimadoMin;
         this.asignatura = asignatura;
     }
 
@@ -31,16 +33,16 @@ public class Tarea {
         return titulo;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
     public LocalDate getFechaEntrega() {
         return fechaEntrega;
     }
 
     public double getPesoNota() {
         return pesoNota;
+    }
+
+    public int getTiempoEstimadoMin() {
+        return tiempoEstimadoMin;
     }
 
     public Asignatura getAsignatura() {
@@ -57,7 +59,6 @@ public class Tarea {
 
     @Override
     public String toString() {
-        return titulo + " | " + asignatura.getNombre() + " | entrega: "
-                + fechaEntrega + " | peso: " + pesoNota + "%";
+        return titulo + " | " + asignatura.getNombre() + " | entrega: " + fechaEntrega + " | peso: " + pesoNota + "%" + " | tiempo: " + tiempoEstimadoMin + " min";
     }
 }
