@@ -1,10 +1,10 @@
 public class EntradaCola implements Comparable<EntradaCola> {
 
     // Tarea que vamos a guardar en la cola
-    private Tarea tarea;
+    private final Tarea tarea;
 
     // Orden en el que se registró la tarea
-    private int ordenLlegada;
+    private final int ordenLlegada;
 
     // Constructor
     public EntradaCola(Tarea tarea, int ordenLlegada) {
@@ -30,19 +30,24 @@ public class EntradaCola implements Comparable<EntradaCola> {
         int fecha = tarea.getFechaEntrega().compareTo(otra.getTarea().getFechaEntrega());
 
         // Si las fechas son diferentes, gana la más próxima
-        if (fecha != 0) {
+        if (fecha != 0)
             return fecha;
-        }
 
         // Si las fechas son iguales, compara el peso de la nota
-        int peso = Double.compare(otra.getTarea().getPesoNota(),tarea.getPesoNota()
-        );
+        int peso = Double.compare(otra.getTarea().getPesoNota(),tarea.getPesoNota());
 
         // Si los pesos son diferentes, gana el mayor
-        if (peso != 0) {return peso;
-        }
+        if (peso != 0)
+            return peso;
 
-        // Si todo es igual, gana la que se registró primero
+        // Si los pesos son iguales, compara el tiempo estimado en el que se realiza
+        int tiempo = Integer.compare(otra.getTarea().getTiempoEstimadoMin(), tarea.getTiempoEstimadoMin());
+
+        // Si los tiempos son diferentes, gana el mayor
+        if (tiempo != 0)
+            return tiempo;
+
+        // Si las condiciones son iguales, gana la que se registró primero
         return Integer.compare(ordenLlegada,otra.getOrdenLlegada());
     }
 }
