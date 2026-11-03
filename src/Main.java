@@ -1,3 +1,7 @@
+import Exceptions.EColaVacia;
+import Exceptions.EEntradaInvalida;
+import Exceptions.EFueraRango;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -53,16 +57,14 @@ public class Main {
 
             List<Tarea> pendientes = gestor.obtenerPendientes();
 
-            for (int i = 0; i < pendientes.size(); i++) {
-
-                Tarea tarea = pendientes.get(i);
+            for (Tarea tarea : pendientes) {
 
                 System.out.println(
                         tarea.getId() + " - "
-                        + tarea.getTitulo() + " - "
-                        + tarea.getFechaEntrega() + " - "
-                        + tarea.getPesoNota() + "% - "
-                        + tarea.getTiempoEstimadoMin() + " min"
+                                + tarea.getTitulo() + " - "
+                                + tarea.getFechaEntrega() + " - "
+                                + tarea.getPesoNota() + "% - "
+                                + tarea.getTiempoEstimadoMin() + " min"
                 );
             }
 
@@ -99,16 +101,14 @@ public class Main {
 
             pendientes = gestor.obtenerPendientes();
 
-            for (int i = 0; i < pendientes.size(); i++) {
-
-                Tarea tarea = pendientes.get(i);
+            for (Tarea tarea : pendientes) {
 
                 System.out.println(
                         tarea.getId() + " - "
-                        + tarea.getTitulo() + " - "
-                        + tarea.getFechaEntrega() + " - "
-                        + tarea.getPesoNota() + "% - "
-                        + tarea.getTiempoEstimadoMin() + " min"
+                                + tarea.getTitulo() + " - "
+                                + tarea.getFechaEntrega() + " - "
+                                + tarea.getPesoNota() + "% - "
+                                + tarea.getTiempoEstimadoMin() + " min"
                 );
             }
 
@@ -117,14 +117,12 @@ public class Main {
 
             List<Tarea> historial = gestor.obtenerHistorial();
 
-            for (int i = 0; i < historial.size(); i++) {
-
-                Tarea tarea = historial.get(i);
+            for (Tarea tarea : historial) {
 
                 System.out.println(
                         tarea.getId() + " - "
-                        + tarea.getTitulo() + " - "
-                        + tarea.getEstado()
+                                + tarea.getTitulo() + " - "
+                                + tarea.getEstado()
                 );
             }
 

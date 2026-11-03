@@ -1,3 +1,7 @@
+import Exceptions.EColaVacia;
+import Exceptions.EEntradaInvalida;
+import Exceptions.EFueraRango;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +19,7 @@ public class GestorTareas {
     private final List<Tarea> historial;
     
     // Guarda las asignaturas que se crean
-    private ArrayList<Asignatura> asignaturas;
+    private final ArrayList<Asignatura> asignaturas;
 
     // Constructor
     public GestorTareas() {
