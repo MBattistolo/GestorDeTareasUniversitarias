@@ -10,7 +10,7 @@ import java.util.PriorityQueue;
 public class GestorTareas {
 
     // Cola que organiza las tareas por prioridad
-    private PriorityQueue<EntradaCola> cola;
+    private final PriorityQueue<EntradaCola> cola;
 
     // Lleva el orden en que se registran las tareas
     private int siguienteOrden;
@@ -24,7 +24,6 @@ public class GestorTareas {
         siguienteOrden = 0;
         historial = new ArrayList<>();
     }
-
     
     public void registrarTarea(int id, String titulo,String descripcion, LocalDate fechaEntrega,double pesoNota,
     		int tiempoEstimadoMin,Asignatura asignatura) throws EFueraRango {
@@ -41,7 +40,6 @@ public class GestorTareas {
         // Aumenta el orden para la siguiente tarea
         siguienteOrden++;
     }
-
  
     public Tarea consultarSiguiente() throws EColaVacia {
 
@@ -100,49 +98,40 @@ public class GestorTareas {
         return pendientes;
     }
 
-	public Tarea completarPorId(int id) throws EEntradaInvalida {
+    public Tarea completarPorId(int id) throws EEntradaInvalida {
 
-		// Crea una copia de la cola original
-		PriorityQueue<EntradaCola> copia = new PriorityQueue<>(cola);
+        // Crea una copia de la cola original
+        PriorityQueue<EntradaCola> copia = new PriorityQueue<>(cola);
 
-		// Recorre las entradas de la copia
-		int n = copia.size();
+        Tarea tareaEncontrada = null;
 
-		for (int i = 0; i < n; i++) {
+        // Recorre las entradas de la copia
+        while (!copia.isEmpty() && tareaEncontrada == null) {
 
-			// Extrae una entrada de la copia
-			EntradaCola entrada = copia.poll();
+            // Extrae una entrada de la copia
+            EntradaCola entrada = copia.poll();
 
-			// Comprueba si es la tarea buscada
-			if (entrada.getTarea().getId() == id) {
+            // Comprueba si es la tarea buscada
+            if (entrada.getTarea().getId() == id) {
 
-				// Elimina la entrada de la cola original
-				cola.remove(entrada);
+                // Elimina la entrada de la cola original
+                cola.remove(entrada);
 
-				// Marca la tarea como completada
-				Tarea tarea = entrada.getTarea();
-				tarea.marcarCompletada();
+                // Marca la tarea como completada
+                tareaEncontrada = entrada.getTarea();
+                tareaEncontrada.marcarCompletada();
 
-				// Guarda la tarea en el historial
-				historial.add(tarea);
+                // Guarda la tarea en el historial
+                historial.add(tareaEncontrada);
+            }
+        }
 
-				return tarea;
-			}
-		}
+        if (tareaEncontrada == null) {
+            throw new EEntradaInvalida("No existe una tarea pendiente con ese ID.");
+        }
 
-		// Si no encuentra la tarea, lanza una excepción
-		throw new EEntradaInvalida("No existe una tarea pendiente con ese ID.");
-	}
-
-    
-    
-    
-    
-    // Devuelve la cantidad de tareas pendientes
-    public int cantidadPendientes() {
-        return cola.size();
+        return tareaEncontrada;
     }
-    
 
     // Devuelve el historial de tareas completadas
     public List<Tarea> obtenerHistorial() {
