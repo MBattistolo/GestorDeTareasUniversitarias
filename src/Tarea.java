@@ -10,11 +10,16 @@ public class Tarea {
     private final double pesoNota;
     private final int tiempoEstimadoMin;
     private final Asignatura asignatura;
+
     private EstadoTarea estado = EstadoTarea.PENDIENTE;
 
-    public Tarea(int id, String titulo, String descripcion, LocalDate fechaEntrega, double pesoNota, int tiempoEstimadoMin, Asignatura asignatura) throws EFueraRango {
+    public Tarea(int id, String titulo, String descripcion,
+                 LocalDate fechaEntrega, double pesoNota,
+                 int tiempoEstimadoMin, Asignatura asignatura)
+                 throws EFueraRango {
+
         if (pesoNota < 0 || pesoNota > 100)
-            throw new EFueraRango(0, 100);
+        	throw new EFueraRango("El porcentaje debe estar entre 0 y 100.");
 
         this.id = id;
         this.titulo = titulo;
@@ -31,6 +36,10 @@ public class Tarea {
 
     public String getTitulo() {
         return titulo;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
     }
 
     public LocalDate getFechaEntrega() {
@@ -59,6 +68,10 @@ public class Tarea {
 
     @Override
     public String toString() {
-        return titulo + " | " + asignatura.getNombre() + " | entrega: " + fechaEntrega + " | peso: " + pesoNota + "%" + " | tiempo: " + tiempoEstimadoMin + " min";
+        return titulo + " | " + asignatura.getNombre()
+                + " | entrega: " + fechaEntrega
+                + " | peso: " + pesoNota + "%"
+                + " | tiempo: " + tiempoEstimadoMin + " min";
     }
 }
+

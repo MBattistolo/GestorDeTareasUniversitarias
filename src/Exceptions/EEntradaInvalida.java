@@ -1,7 +1,8 @@
 package Exceptions;
 
-public class EEntradaInvalida extends RuntimeException {
-    public EEntradaInvalida(String message) {
-        super(message);
+public class EEntradaInvalida extends Exception {
+
+    public EEntradaInvalida(String s) {
+        super(s);
     }
 }
