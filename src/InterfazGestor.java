@@ -107,6 +107,7 @@ public class InterfazGestor extends JFrame {
         JButton btnCompletarId = crearBoton("Completar por ID", VERDE);
         JButton btnPendientes = crearBoton("Ver pendientes", GRIS);
         JButton btnHistorial = crearBoton("Ver historial", GRIS);
+        JButton btnCargar = crearBoton("Cargar Tareas", AZUL);
 
         btnNueva.addActionListener(e -> pestanas.setSelectedIndex(1));
         btnConsultar.addActionListener(e -> consultarSiguiente());
@@ -122,6 +123,8 @@ public class InterfazGestor extends JFrame {
             actualizarDatos();
             pestanas.setSelectedIndex(2);
         });
+        
+        btnCargar.addActionListener(e -> cargarTareas());
 
         acciones.add(btnNueva);
         acciones.add(btnConsultar);
@@ -129,6 +132,7 @@ public class InterfazGestor extends JFrame {
         acciones.add(btnCompletarId);
         acciones.add(btnPendientes);
         acciones.add(btnHistorial);
+        acciones.add(btnCargar);
 
         JScrollPane scrollAcciones = new JScrollPane(acciones);
         scrollAcciones.setBorder(null);
@@ -294,7 +298,7 @@ public class InterfazGestor extends JFrame {
 
         String[] columnas = {
             "ID", "Título", "Asignatura", "Fecha",
-            "Peso (%)", "Estado"
+            "Peso (%)", "Tiempo (min)", "Estado"
         };
 
         modeloHistorial = crearModelo(columnas);
@@ -517,6 +521,45 @@ public class InterfazGestor extends JFrame {
             mostrarError(e.getMessage());
         }
     }
+    
+    private void cargarTareas() {
+    	try {
+			gestor.registrarTarea(1, "Taller de pilas", "Resolver ejercicios",LocalDate.of(2026, 11, 10), 15, 120,
+			        "EDA", "Estructuras de Datos");
+		} catch (EFueraRango | EEntradaInvalida e) {
+			mostrarError(e.getMessage());
+		}
+
+        try {
+			gestor.registrarTarea(2, "Parcial de calculo", "Estudiar derivadas",LocalDate.of(2026, 11, 5), 25, 180,
+			        "CAL", "Calculo");
+		} catch (EFueraRango | EEntradaInvalida e) {
+			mostrarError(e.getMessage());
+		}
+
+        try {
+			gestor.registrarTarea(3, "Trabajo de finanzas", "Analizar estados financieros",LocalDate.of(2026, 11, 8), 30, 150,
+			        "FIN", "Finanzas");
+		} catch (EFueraRango | EEntradaInvalida e) {
+			mostrarError(e.getMessage());
+		}
+
+        try {
+			gestor.registrarTarea(4, "Quiz de estructuras", "Estudiar colas",LocalDate.of(2026, 11, 5), 10, 60,
+			        "EDA", "Estructuras de Datos");
+		} catch (EFueraRango | EEntradaInvalida e) {
+			mostrarError(e.getMessage());
+		}
+
+        try {
+			gestor.registrarTarea(5, "Proyecto final", "Terminar proyecto",LocalDate.of(2026, 11, 5), 25, 240,
+			        "EDA", "Estructuras de Datos");
+		} catch (EFueraRango | EEntradaInvalida e) {
+			mostrarError(e.getMessage());
+		}
+        
+        actualizarDatos();
+    }
 
     // Buscar tarea por ID
     private Tarea buscarPendiente(int id) {
@@ -565,6 +608,7 @@ public class InterfazGestor extends JFrame {
                     tarea.getAsignatura().getNombre(),
                     tarea.getFechaEntrega(),
                     tarea.getPesoNota(),
+                    tarea.getTiempoEstimadoMin(),
                     tarea.getEstado()
             });
         }
