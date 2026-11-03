@@ -1,7 +1,3 @@
-import Exceptions.EColaVacia;
-import Exceptions.EEntradaInvalida;
-import Exceptions.EFueraRango;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -11,27 +7,35 @@ public class Main {
 
         GestorTareas gestor = new GestorTareas();
 
-        Asignatura estructuras = new Asignatura("EDA", "Estructuras de Datos");
-        Asignatura calculo = new Asignatura("CAL", "Calculo");
-        Asignatura finanzas = new Asignatura("FIN", "Finanzas");
-
         try {
 
             // Registrar tareas
-            gestor.registrarTarea(1, "Taller de pilas", "Resolver ejercicios",
-                    LocalDate.of(2026, 11, 10), 15, 120, estructuras);
+            gestor.registrarTarea(1, "Taller de pilas", "Resolver ejercicios",LocalDate.of(2026, 11, 10), 15, 120,
+                    "EDA", "Estructuras de Datos");
 
-            gestor.registrarTarea(2, "Parcial de calculo", "Estudiar derivadas",
-                    LocalDate.of(2026, 11, 5), 25, 180, calculo);
+            gestor.registrarTarea(2, "Parcial de calculo", "Estudiar derivadas",LocalDate.of(2026, 11, 5), 25, 180,
+                    "CAL", "Calculo");
 
-            gestor.registrarTarea(3, "Trabajo de finanzas", "Analizar estados financieros",
-                    LocalDate.of(2026, 11, 8), 30, 150, finanzas);
+            gestor.registrarTarea(3, "Trabajo de finanzas", "Analizar estados financieros",LocalDate.of(2026, 11, 8), 30, 150,
+                    "FIN", "Finanzas");
 
-            gestor.registrarTarea(4, "Quiz de estructuras", "Estudiar colas",
-                    LocalDate.of(2026, 11, 5), 10, 60, estructuras);
+            gestor.registrarTarea(4, "Quiz de estructuras", "Estudiar colas",LocalDate.of(2026, 11, 5), 10, 60,
+                    "EDA", "Estructuras de Datos");
 
-            gestor.registrarTarea(5, "Proyecto final", "Terminar proyecto",
-                    LocalDate.of(2026, 11, 5), 25, 240, estructuras);
+            gestor.registrarTarea(5, "Proyecto final", "Terminar proyecto",LocalDate.of(2026, 11, 5), 25, 240,
+                    "EDA", "Estructuras de Datos");
+
+            // Tarea con misma fecha y peso que la tarea 5,
+            // pero con mayor tiempo estimado
+            gestor.registrarTarea(6, "Proyecto de calculo", "Resolver proyecto",
+                    LocalDate.of(2026, 11, 5), 25, 300,
+                    "CAL", "Calculo");
+
+            // Tarea con los mismos criterios que la tarea 6
+            // Se desempata por orden de llegada
+            gestor.registrarTarea(7, "Informe de calculo", "Preparar informe",
+                    LocalDate.of(2026, 11, 5), 25, 300,
+                    "CAL", "Calculo");
 
             // Consultar la siguiente tarea
             System.out.println("===== SIGUIENTE TAREA =====");
@@ -42,6 +46,7 @@ public class Main {
             System.out.println("Titulo: " + siguiente.getTitulo());
             System.out.println("Fecha: " + siguiente.getFechaEntrega());
             System.out.println("Peso: " + siguiente.getPesoNota() + "%");
+            System.out.println("Tiempo: " + siguiente.getTiempoEstimadoMin() + " minutos");
 
             // Mostrar tareas pendientes
             System.out.println("\n===== TAREAS PENDIENTES =====");
@@ -56,7 +61,8 @@ public class Main {
                         tarea.getId() + " - "
                         + tarea.getTitulo() + " - "
                         + tarea.getFechaEntrega() + " - "
-                        + tarea.getPesoNota() + "%"
+                        + tarea.getPesoNota() + "% - "
+                        + tarea.getTiempoEstimadoMin() + " min"
                 );
             }
 
@@ -74,6 +80,20 @@ public class Main {
 
             System.out.println("Completada: " + completadaId.getTitulo());
 
+            // Verificar que no se pueda repetir un ID
+            System.out.println("\n===== VALIDACION DE ID DUPLICADO =====");
+
+            try {
+
+                gestor.registrarTarea(1, "Tarea repetida", "Prueba de ID",
+                        LocalDate.of(2026, 11, 12), 10, 60,
+                        "EDA", "Estructuras de Datos");
+
+            } catch (EEntradaInvalida e) {
+
+                System.out.println("Error detectado: " + e.getMessage());
+            }
+
             // Mostrar tareas pendientes actualizadas
             System.out.println("\n===== PENDIENTES ACTUALIZADAS =====");
 
@@ -83,7 +103,13 @@ public class Main {
 
                 Tarea tarea = pendientes.get(i);
 
-                System.out.println(tarea.getId() + " - " + tarea.getTitulo());
+                System.out.println(
+                        tarea.getId() + " - "
+                        + tarea.getTitulo() + " - "
+                        + tarea.getFechaEntrega() + " - "
+                        + tarea.getPesoNota() + "% - "
+                        + tarea.getTiempoEstimadoMin() + " min"
+                );
             }
 
             // Mostrar historial
@@ -102,7 +128,30 @@ public class Main {
                 );
             }
 
+            // Completar todas las tareas pendientes
+            System.out.println("\n===== COMPLETAR TODAS LAS TAREAS =====");
+
+            while (!gestor.obtenerPendientes().isEmpty()) {
+
+                Tarea tarea = gestor.completarSiguiente();
+
+                System.out.println("Completada: " + tarea.getTitulo());
+            }
+
+            // Verificar el funcionamiento con la cola vacia
+            System.out.println("\n===== PRUEBA DE COLA VACIA =====");
+
+            try {
+
+                gestor.consultarSiguiente();
+
+            } catch (EColaVacia e) {
+
+                System.out.println("Error detectado: " + e.getMessage());
+            }
+
         } catch (EFueraRango | EColaVacia | EEntradaInvalida e) {
+
             System.out.println("Error: " + e.getMessage());
         }
     }
