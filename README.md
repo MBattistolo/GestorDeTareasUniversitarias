@@ -88,9 +88,9 @@ Los tiempos concretos se obtienen ejecutando `MainSimulacion`; no se incluyen va
 
 | Estructura | Insertar una tarea | Extraer la más prioritaria | Insertar y extraer las `n` tareas |
 | --- | --- | --- | --- |
-| `PriorityQueue` | O(log n) amortizado | O(log n) | O(n log n) |
+| `PriorityQueue` | O(log n) | O(log n) | O(n log n) |
 | Lista ordenada | O(n), por búsqueda y desplazamientos | O(n), por desplazamientos en `remove(0)` | O(n²) |
-| Lista desordenada | O(1) amortizado | O(n), por búsqueda y posible desplazamiento | O(n²) |
+| Lista desordenada | O(1) | O(n), por búsqueda y posible desplazamiento | O(n²) |
 
 *`n` representa la cantidad de tareas. Los costos de inserción amortizados contemplan el crecimiento ocasional del arreglo interno.*
 
